@@ -26,17 +26,38 @@ Requirements:
 4. Include 4 options labeled A, B, C, D.
 5. Include the best answer and brief explanation.
 6. Return valid JSON in this exact structure:
-{
+{{
   "scenario_id": "unique-id",
   "question": "short scenario question",
   "context": "brief situational context",
-  "options": {
+  "image_prompt": "child-safe illustration prompt for this scene",
+  "image_alt": "short accessible description of the scene",
+  "hotspots": [
+    {{
+      "id": "object-id",
+      "label": "short object label",
+      "x": 50,
+      "y": 50,
+      "radius": 10,
+      "meaning": "why this object matters in the scene"
+    }}
+  ],
+  "options": {{
     "A": "option text",
     "B": "option text",
     "C": "option text",
     "D": "option text"
-  },
+  }},
   "best_answer": "A",
   "explanation": "why this is the best response"
-}
+}}
+
+Image requirements:
+- Create a warm, simple, child-friendly educational illustration with no frightening or unsafe content.
+- Do not put readable words, letters, numbers, or answer choices inside the image.
+- Include the key objects needed for the child to understand the situation.
+- Return 1 to 3 hotspots for important visible objects.
+- Hotspot x and y are percentages from the left and top edges (0 to 100).
+- Hotspot radius is a percentage of the image width between 4 and 20.
+- Hotspot labels must match visible objects, and meaning must explain the learning connection.
 """

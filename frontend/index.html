@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scene Steps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">✦</span><span>Scene Steps</span></div>
+      <span class="status-pill" id="status-pill">Ready to play</span>
+    </header>
+
+    <section class="intro">
+      <p class="eyebrow">A little picture adventure</p>
+      <h1>Look, think,<br><em>have a go!</em></h1>
+      <p class="intro-copy">Tap the picture, then pick the answer that feels kind and helpful.</p>
+    </section>
+
+    <section class="workspace" aria-label="Scenario activity">
+      <aside class="profile-panel">
+        <div class="panel-heading"><span>01</span><h2>Make my picture</h2></div>
+        <form id="scenario-form">
+          <label>My age <input id="age" type="number" min="3" max="18" value="10" required></label>
+          <label>Something I love <input id="interest" value="dinosaurs" maxlength="80" required></label>
+          <label>What I am practising <input id="target-skill" value="communication" maxlength="80" required></label>
+          <label>Pick a level <select id="difficulty"><option value="1">Easy peasy</option><option value="2">Ready for more</option><option value="3">Super challenge</option></select></label>
+          <button class="primary-button" type="submit"><span>Show me a picture</span><span aria-hidden="true">★</span></button>
+        </form>
+        <p class="assistive-note">There is no rush. You can look again whenever you like.</p>
+      </aside>
+
+      <article class="activity-panel" id="activity-panel" aria-live="polite">
+        <div class="activity-empty" id="empty-state">
+          <span class="empty-icon">★</span>
+          <h2>Let’s make a picture!</h2>
+          <p>Tell me what you like, then tap the bright button.</p>
+        </div>
+        <div class="activity-content" id="activity-content" hidden>
+          <div class="scene-meta"><span class="step-label">02 / Look around</span><span id="hotspot-hint">Tap a glowing star</span></div>
+          <div class="scene-frame">
+            <img id="scenario-image" alt="">
+            <div class="hotspot-layer" id="hotspot-layer"></div>
+          </div>
+          <div class="scene-caption"><span class="caption-dot"></span><p id="image-alt"></p></div>
+          <div class="question-block">
+            <span class="step-label">03 / Your turn</span>
+            <h2 id="question"></h2>
+            <p id="context"></p>
+            <div class="options" id="options"></div>
+          </div>
+          <div class="feedback" id="feedback" hidden></div>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

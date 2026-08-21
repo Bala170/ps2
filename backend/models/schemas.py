@@ -5,6 +5,15 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
+class ScenarioHotspot(BaseModel):
+    id: str
+    label: str
+    x: float = Field(..., ge=0, le=100)
+    y: float = Field(..., ge=0, le=100)
+    radius: float = Field(..., ge=4, le=20)
+    meaning: str
+
+
 class ChildProfile(BaseModel):
     child_id: str | None = None
     age: int = Field(..., ge=3, le=18)
@@ -38,6 +47,9 @@ class ScenarioResponse(BaseModel):
     explanation: str
     difficulty: int
     target_skill: str
+    image_url: str | None = None
+    image_alt: str | None = None
+    hotspots: list[ScenarioHotspot] = Field(default_factory=list)
 
 
 class ProgressSummary(BaseModel):
