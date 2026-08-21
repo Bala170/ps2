@@ -1,0 +1,42 @@
+from __future__ import annotations
+
+import json
+from typing import Any
+
+SYSTEM_PROMPT = """
+You are an AI assistant generating learning scenarios for children with ASD and intellectual disabilities.
+Create clear, supportive, age-appropriate situations that help with social communication and daily life skills.
+Keep the tone warm, simple, and respectful. Return only valid JSON.
+"""
+
+
+def build_scenario_prompt(profile: dict[str, Any], difficulty: int) -> str:
+    profile_json = json.dumps(profile, ensure_ascii=False)
+    return f"""
+{SYSTEM_PROMPT}
+
+Generate one scenario for a child profile below.
+- Difficulty: {difficulty} (1=easy, 2=medium, 3=challenging)
+- Child profile: {profile_json}
+
+Requirements:
+1. Generate age-appropriate social or communication scenario.
+2. Make it suitable for a child with ASD and ID.
+3. Use the child's interest, target skill, and difficulty.
+4. Include 4 options labeled A, B, C, D.
+5. Include the best answer and brief explanation.
+6. Return valid JSON in this exact structure:
+{
+  "scenario_id": "unique-id",
+  "question": "short scenario question",
+  "context": "brief situational context",
+  "options": {
+    "A": "option text",
+    "B": "option text",
+    "C": "option text",
+    "D": "option text"
+  },
+  "best_answer": "A",
+  "explanation": "why this is the best response"
+}
+"""
