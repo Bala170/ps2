@@ -58,6 +58,15 @@ class FirebaseService:
         except Exception:
             return blob.generate_signed_url(version="v4", expiration=3600, method="GET")
 
+    def upload_video(self, video_bytes: bytes, object_name: str, content_type: str) -> str:
+        if self.storage_client is None:
+            raise HTTPException(status_code=503, detail="Firebase Storage is not configured.")
+        bucket_name = os.getenv("FIREBASE_STORAGE_BUCKET") or f"{self.project_id}.appspot.com"
+        blob = self.storage_client.bucket(bucket_name).blob(object_name)
+        blob.upload_from_string(video_bytes, content_type=content_type)
+        # Video references stay private; replay access should use a short-lived signed URL.
+        return blob.generate_signed_url(version="v4", expiration=3600, method="GET")
+
     def add_document(self, collection: str, payload: dict[str, Any]) -> dict[str, Any]:
         if self.client is None:
             raise HTTPException(status_code=500, detail="Firebase is not configured.")

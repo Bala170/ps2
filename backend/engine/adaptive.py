@@ -97,6 +97,28 @@ class AdaptiveEngine:
         return weakest_skill
 
     def recommend_next_activity(self, child_id: str) -> dict[str, Any]:
+        therapist_guidance = {
+            "Sharing": {
+                "activity": "Role-play sharing a favourite toy for two minutes.",
+                "caregiver_tip": "Name the turn clearly and praise any attempt to share.",
+            },
+            "Expressing Feelings": {
+                "activity": "Choose one feeling card and complete: I feel ___ because ___.",
+                "caregiver_tip": "Offer two feeling choices and allow extra wait time before prompting.",
+            },
+            "Making Friends": {
+                "activity": "Practise one friendly greeting and one question about another child.",
+                "caregiver_tip": "Model a short greeting, then celebrate an attempt rather than perfect eye contact.",
+            },
+            "Asking for Help": {
+                "activity": "Practise saying: Can you help me, please? in one everyday situation.",
+                "caregiver_tip": "Pause before helping so the child has time to ask independently.",
+            },
+            "Being Patient": {
+                "activity": "Use a visual timer for a one-minute wait, then practise a calm choice.",
+                "caregiver_tip": "Show how long the wait will be and offer one quiet activity while waiting.",
+            },
+        }
         profile = self.get_child_profile(child_id)
         if not profile:
             return {
@@ -105,6 +127,9 @@ class AdaptiveEngine:
                 "difficulty": 1,
                 "recommendation": "Start with a simple greeting scenario.",
                 "reason": "No profile was found for this child yet.",
+                "current_score": 0,
+                "activity": "Practise saying hello and asking one friendly question.",
+                "caregiver_tip": "Keep the first practice short, predictable, and encouraging.",
             }
 
         weakest_skill = self.identify_weakest_skill(child_id)
@@ -114,12 +139,20 @@ class AdaptiveEngine:
         elif self.get_average_score(child_id) < 0.45:
             current_difficulty = max(1, current_difficulty - 1)
 
+        current_score = round(self.get_skill_performance(child_id).get(weakest_skill, 0) * 100, 1)
+        guidance = therapist_guidance.get(weakest_skill, {
+            "activity": f"Practise {weakest_skill} in one short everyday role-play.",
+            "caregiver_tip": "Use simple language, visual choices, and praise effort.",
+        })
         recommendation = {
             "child_id": child_id,
             "skill": weakest_skill,
             "difficulty": int(current_difficulty),
             "recommendation": f"Practice {weakest_skill} with a {profile['interest']}-based activity at level {current_difficulty}.",
             "reason": "This skill has the lowest average performance and needs targeted practice.",
+            "current_score": current_score,
+            "activity": guidance["activity"],
+            "caregiver_tip": guidance["caregiver_tip"],
         }
         return recommendation
 

@@ -26,7 +26,7 @@ def generate_scenario(payload: ScenarioRequest) -> ScenarioResponse:
     adaptive_engine.create_child_profile(profile.dict())
 
     try:
-        scenario = gemini_service.generate_scenario(profile, profile.difficulty)
+        scenario = gemini_service.generate_scenario(profile, profile.difficulty, payload.language)
     except HTTPException:
         raise
     except Exception as exc:  # pragma: no cover - safety for unexpected errors

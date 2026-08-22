@@ -9,6 +9,8 @@ from fastapi.staticfiles import StaticFiles
 from backend.routes.progress import router as progress_router
 from backend.routes.responses import router as responses_router
 from backend.routes.scenarios import router as scenarios_router
+from backend.routes.sessions import router as sessions_router
+from backend.routes.therapist import router as therapist_router
 
 app = FastAPI(
     title="Interactive Skills Enhancer API",
@@ -33,6 +35,8 @@ def health() -> dict[str, str]:
 app.include_router(progress_router, prefix="/api/v1")
 app.include_router(scenarios_router, prefix="/api/v1")
 app.include_router(responses_router, prefix="/api/v1")
+app.include_router(sessions_router, prefix="/api/v1")
+app.include_router(therapist_router, prefix="/api/v1")
 
 media_dir = Path(__file__).resolve().parents[1] / "media"
 media_dir.mkdir(parents=True, exist_ok=True)

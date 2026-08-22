@@ -30,12 +30,39 @@ class ScenarioRequest(BaseModel):
     skill_level: int = Field(..., ge=1, le=5)
     target_skill: str = Field(..., min_length=2, max_length=80)
     difficulty: int = Field(default=1, ge=1, le=3)
+    language: str = Field(default="en", min_length=2, max_length=10)
 
 
 class ResponseSubmission(BaseModel):
     child_id: str
     scenario_id: str
     selected_answer: str = Field(..., min_length=1, max_length=10)
+
+
+class SessionStartRequest(BaseModel):
+    child_id: str = Field(..., min_length=1, max_length=100)
+    scenario_id: str = Field(..., min_length=1, max_length=120)
+    skill: str = Field(..., min_length=1, max_length=80)
+    difficulty: int = Field(..., ge=1, le=3)
+    recording_enabled: bool = False
+
+
+class SessionCompleteRequest(BaseModel):
+    score: float = Field(..., ge=0, le=100)
+
+
+class LearningSession(BaseModel):
+    session_id: str
+    child_id: str
+    scenario_id: str
+    skill: str
+    difficulty: int
+    score: float | None = None
+    recording_enabled: bool
+    video_storage_path: str | None = None
+    video_url: str | None = None
+    started_at: str
+    completed_at: str | None = None
 
 
 class ScenarioResponse(BaseModel):
@@ -65,3 +92,16 @@ class NextActivityRecommendation(BaseModel):
     difficulty: Literal[1, 2, 3]
     recommendation: str
     reason: str
+    current_score: float = 0
+    activity: str
+    caregiver_tip: str
+    source: str = "Therapist-informed guidance"
+
+
+class TherapistRecommendationResponse(BaseModel):
+    child_id: str
+    recommended_support_area: str
+    confidence: float
+    key_indicators: dict[str, float]
+    reason: str
+    disclaimer: str

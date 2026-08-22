@@ -1,0 +1,334 @@
+We need to implement the Therapist Recommendation ML module for our
+ISE (Interactive Skills Enhancer) project.
+
+IMPORTANT:
+- This is an educational/support recommendation system.
+- It must NOT diagnose ASD, ID, emotional disorders, or any medical condition.
+- It must NOT replace a qualified therapist or clinical assessment.
+- The output should be a "recommended support area" for the parent/educator.
+- Do not use facial recognition or facial emotion detection.
+- Do not use the child's video recording as a clinical diagnostic signal.
+- Keep the implementation simple and reliable for an 8-hour hackathon.
+- Do not modify unrelated existing modules.
+
+==================================================
+OBJECTIVE
+==================================================
+
+Build and train a real ML model that recommends an appropriate
+support/therapy area based on the child's accumulated learning data.
+
+The model should learn from measurable learning indicators such as:
+
+- communication score
+- social interaction score
+- empathy score
+- emotion recognition score
+- response accuracy
+- response time
+- mistake rate
+- repeated mistake count
+- improvement trend
+- number of completed sessions
+- current difficulty level
+
+The model output should be a SUPPORT AREA, not a medical diagnosis.
+
+Suggested output classes:
+
+0 = Speech & Communication Support
+1 = Social Skills Support
+2 = Emotional/Social Understanding Support
+3 = Behavioral/Functional Skills Support
+
+Keep these labels configurable so they can be changed later.
+
+==================================================
+ML PIPELINE
+==================================================
+
+Create:
+
+ml/
+├── dataset/
+│   ├── therapist_training.csv
+│   └── README.md
+├── train_model.py
+├── evaluate_model.py
+├── predict.py
+├── preprocessing.py
+└── models/
+    ├── therapist_recommender.pkl
+    └── feature_columns.pkl
+
+Use:
+
+- Python
+- Pandas
+- NumPy
+- Scikit-learn
+- Random Forest Classifier
+
+Use a Pipeline where appropriate so preprocessing and prediction
+remain consistent.
+
+==================================================
+DATASET
+==================================================
+
+First inspect the existing project and determine whether we already
+have a labelled dataset.
+
+If a suitable labelled dataset already exists, reuse it.
+
+If there is no suitable labelled dataset, create a clearly documented
+MVP training dataset based on structured learning indicators.
+
+DO NOT claim that synthetic/generated data is real clinical data.
+
+The dataset must contain columns similar to:
+
+communication_score
+social_interaction_score
+empathy_score
+emotion_recognition_score
+response_accuracy
+average_response_time
+mistake_rate
+repeated_mistakes
+improvement_rate
+completed_sessions
+difficulty_level
+recommended_support_area
+
+Use realistic ranges and meaningful relationships between features
+and labels.
+
+Document clearly in dataset/README.md:
+- dataset source
+- whether data is public, curated, or synthetic
+- feature descriptions
+- target labels
+- limitations
+
+If synthetic data is required for the hackathon MVP, explicitly label
+it as synthetic and do not represent it as real patient/clinical data.
+
+==================================================
+TRAINING
+==================================================
+
+Implement train_model.py.
+
+Requirements:
+
+1. Load the dataset.
+2. Validate missing values and invalid ranges.
+3. Separate features and target.
+4. Split into training and testing data.
+5. Train RandomForestClassifier.
+6. Save the trained model.
+7. Save the feature column order.
+8. Print:
+   - Accuracy
+   - Precision
+   - Recall
+   - F1-score
+   - Classification report
+9. Generate and save a confusion matrix image for the presentation.
+10. Print feature importance.
+
+Do NOT invent accuracy values.
+
+Only display metrics obtained from the actual training run.
+
+Use a reproducible random_state.
+
+==================================================
+REAL-TIME CHILD DATA
+==================================================
+
+The application already stores child learning performance.
+
+Create a feature extraction function that converts the child's
+recent learning data into the exact feature format expected by
+the trained model.
+
+Example:
+
+Child learning history
+        ↓
+Feature extraction
+        ↓
+ML model
+        ↓
+Support area recommendation
+
+The model should use recent/aggregated performance rather than
+single-question data wherever possible.
+
+==================================================
+RECOMMENDATION API
+==================================================
+
+Integrate the trained model into the existing FastAPI backend.
+
+Create an endpoint:
+
+GET /children/{child_id}/therapist-recommendation
+
+The endpoint should:
+
+1. Fetch the child's learning history from Firebase.
+2. Calculate the required ML features.
+3. Load the trained model.
+4. Generate the predicted support area.
+5. Return the recommendation.
+6. Return confidence/probability if supported by the model.
+7. Return the main contributing indicators.
+8. Return a clear disclaimer that this is a support recommendation
+   and not a medical diagnosis.
+
+Example response:
+
+{
+  "child_id": "child_001",
+  "recommended_support_area": "Speech & Communication Support",
+  "confidence": 0.84,
+  "key_indicators": {
+      "communication_score": 42,
+      "social_interaction_score": 61,
+      "emotion_recognition_score": 70,
+      "improvement_rate": 0.08
+  },
+  "reason": "Communication performance has remained relatively low
+             across recent learning sessions.",
+  "disclaimer": "This is an educational support recommendation and
+                  not a clinical diagnosis."
+}
+
+==================================================
+PARENT DASHBOARD
+==================================================
+
+Add the recommendation to the existing parent module.
+
+Display:
+
+Recommended Support Area
+        ↓
+Confidence
+        ↓
+Key learning indicators
+        ↓
+Reason for recommendation
+        ↓
+Progress charts
+
+Do NOT display language such as:
+- "Your child has..."
+- "Your child is diagnosed with..."
+- "Your child needs medical treatment..."
+
+Use:
+- "Recommended support area"
+- "Learning indicator"
+- "Consider consulting a qualified professional"
+
+==================================================
+REAL-TIME LEARNING LOOP
+==================================================
+
+The model should be used after enough learning data is available.
+
+Flow:
+
+Child completes activities
+        ↓
+Performance stored in Firebase
+        ↓
+Feature extraction
+        ↓
+Therapist Recommendation ML model
+        ↓
+Support area recommendation
+        ↓
+Parent dashboard
+
+Do not retrain the model after every single child response.
+
+For the hackathon MVP:
+- Train the base model offline.
+- Use real-time child data for inference.
+- Keep retraining as a future enhancement.
+
+==================================================
+CHARTS / DEMO
+==================================================
+
+Create data suitable for showing:
+
+1. Skill-wise performance bar chart
+2. Progress-over-time line chart
+3. Confusion matrix for the ML model
+4. Feature importance chart
+
+The feature importance chart should help explain why the model
+makes recommendations.
+
+==================================================
+SAFETY
+==================================================
+
+Because this system concerns children:
+
+- Do not infer diagnosis.
+- Do not infer psychological disorders.
+- Do not infer emotional intelligence from facial expressions.
+- Do not use recorded video as a medical/diagnostic feature.
+- Do not expose private child information unnecessarily.
+- Keep model output explainable.
+- Clearly label the recommendation as educational/support guidance.
+
+==================================================
+IMPLEMENTATION PROCESS
+==================================================
+
+Before changing files:
+
+1. Inspect the existing backend.
+2. Inspect existing Firebase models/services.
+3. Inspect existing child progress data.
+4. Inspect existing parent module.
+5. Identify the exact files that need modification.
+6. Tell me which files you will create/change.
+
+Then implement the ML module.
+
+After implementation:
+
+1. Install required dependencies.
+2. Train the model.
+3. Evaluate the model.
+4. Generate real metrics.
+5. Test prediction with sample input.
+6. Test the FastAPI endpoint.
+7. Test Firebase integration.
+8. Fix all errors.
+9. Do not fabricate results.
+
+Finally provide a concise summary containing:
+
+- Files created
+- Files modified
+- Dataset source/type
+- Number of training samples
+- Number of features
+- Number of classes
+- Actual accuracy
+- Precision
+- Recall
+- F1-score
+- Most important features
+- API endpoint
+- Example prediction

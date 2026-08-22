@@ -1,6 +1,7 @@
 import AnimatedBackground from "../components/AnimatedBackground";
 import Companion from "../components/Companion";
 import type { Screen, ChildProfile } from "../App";
+import { useLanguage } from "../lib/i18n";
 
 const LEVELS = [
   { id:1, label:"Hello World!",    emoji:"👋", stars:3, done:true  },
@@ -15,6 +16,7 @@ const LEVELS = [
 interface Props { goTo:(s:Screen)=>void; profile:ChildProfile; }
 
 export default function DashboardScreen({ goTo, profile }: Props) {
+  const { t } = useLanguage();
   const currentLevel = LEVELS.find(l=>l.current)!;
   return (
     <div className="w-full h-full relative flex flex-col overflow-hidden">
@@ -22,7 +24,7 @@ export default function DashboardScreen({ goTo, profile }: Props) {
       <div className="relative z-20 flex items-center justify-between px-4 lg:px-8 pt-5 pb-4" style={{ backdropFilter:"blur(6px)" }}>
         <div className="flex items-center gap-2 rounded-2xl px-4 py-2" style={{ background:"rgba(255,255,255,0.85)", boxShadow:"0 4px 0 #c8c0a8" }}>
           <span style={{ fontSize:20 }}>🧒</span>
-          <div><p style={{ fontFamily:"Fredoka", color:"#2D1B0E", fontSize:16, fontWeight:600, lineHeight:1 }}>{profile.name}</p><p style={{ fontFamily:"Nunito", color:"#5C3D2E", fontSize:11 }}>Age {profile.age}</p></div>
+          <div><p style={{ fontFamily:"Fredoka", color:"#2D1B0E", fontSize:16, fontWeight:600, lineHeight:1 }}>{profile.name}</p><p style={{ fontFamily:"Nunito", color:"#5C3D2E", fontSize:11 }}>{t("Age")} {profile.age}</p></div>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 rounded-full px-3 py-2" style={{ background:"#FAD054", boxShadow:"0 4px 0 #c8a020" }}><span style={{ fontSize:16 }}>⭐</span><span style={{ fontFamily:"Fredoka", color:"#2D1B0E", fontWeight:700, fontSize:16 }}>247</span></div>
@@ -30,14 +32,14 @@ export default function DashboardScreen({ goTo, profile }: Props) {
             <svg width="46" height="46" viewBox="0 0 46 46"><circle cx="23" cy="23" r="19" fill="rgba(255,255,255,0.85)" stroke="#EDE9DC" strokeWidth="4" /><circle cx="23" cy="23" r="19" fill="none" stroke="#7BC7F0" strokeWidth="5" strokeDasharray={`${(2/7)*119.4} 119.4`} strokeLinecap="round" transform="rotate(-90 23 23)" /></svg>
             <div className="absolute inset-0 flex items-center justify-center" style={{ fontFamily:"Fredoka", fontSize:12, color:"#2D1B0E", fontWeight:700 }}>2/7</div>
           </div>
-          <button onClick={()=>goTo("parent")} className="btn-press flex items-center gap-2 rounded-full px-3 py-2" style={{ background:"#F8A4B8", boxShadow:"0 4px 0 #d9839a" }}><span style={{ fontSize:16 }}>🔒</span><span className="hidden sm:inline" style={{ fontFamily:"Fredoka", color:"#2D1B0E", fontSize:14, fontWeight:600 }}>Parents</span></button>
+          <button onClick={()=>goTo("parent")} className="btn-press flex items-center gap-2 rounded-full px-3 py-2" style={{ background:"#F8A4B8", boxShadow:"0 4px 0 #d9839a" }}><span style={{ fontSize:16 }}>🔒</span><span className="hidden sm:inline" style={{ fontFamily:"Fredoka", color:"#2D1B0E", fontSize:14, fontWeight:600 }}>{t("Parents")}</span></button>
         </div>
       </div>
       <div className="relative z-20 px-4 lg:px-8 mb-4">
         <div className="anim-glow rounded-[28px] p-5 flex items-center gap-4" style={{ background:"#7BC7F0", boxShadow:"0 7px 0 #5aaad0, 0 14px 28px rgba(0,0,0,0.12)" }}>
           <Companion mood="idle" size={70} />
-          <div className="flex-1"><p style={{ fontFamily:"Nunito", color:"rgba(255,255,255,0.8)", fontSize:12, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.06em" }}>Current Mission</p><p style={{ fontFamily:"Fredoka", color:"#FFFFFF", fontSize:22, fontWeight:600 }}>{currentLevel.label} {currentLevel.emoji}</p><p style={{ fontFamily:"Nunito", color:"rgba(255,255,255,0.75)", fontSize:13 }}>Skill: {profile.skill}</p></div>
-          <button onClick={()=>goTo("lesson")} className="btn-press rounded-full px-5 py-3 font-bold" style={{ background:"#FFFFFF", color:"#2D1B0E", fontFamily:"Fredoka", fontSize:17, boxShadow:"0 5px 0 rgba(0,0,0,0.15)" }}>Play →</button>
+          <div className="flex-1"><p style={{ fontFamily:"Nunito", color:"rgba(255,255,255,0.8)", fontSize:12, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.06em" }}>{t("Current Mission")}</p><p style={{ fontFamily:"Fredoka", color:"#FFFFFF", fontSize:22, fontWeight:600 }}>{t(currentLevel.label)} {currentLevel.emoji}</p><p style={{ fontFamily:"Nunito", color:"rgba(255,255,255,0.75)", fontSize:13 }}>{t("Skill")}: {t(profile.skill)}</p></div>
+          <button onClick={()=>goTo("lesson")} className="btn-press rounded-full px-5 py-3 font-bold" style={{ background:"#FFFFFF", color:"#2D1B0E", fontFamily:"Fredoka", fontSize:17, boxShadow:"0 5px 0 rgba(0,0,0,0.15)" }}>{t("Play")} →</button>
         </div>
       </div>
       <div className="relative z-10 flex-1 min-h-0 overflow-y-auto px-4 lg:px-8 pb-6">
@@ -62,8 +64,8 @@ export default function DashboardScreen({ goTo, profile }: Props) {
                     <div className="rounded-2xl px-4 py-2.5" style={{ background:level.done||level.current?"rgba(255,255,255,0.9)":"rgba(255,255,255,0.45)", boxShadow:level.done||level.current?"0 4px 0 rgba(0,0,0,0.08)":"none", backdropFilter:"blur(8px)", minWidth:130 }}>
                       <p style={{ fontFamily:"Fredoka", color:"#2D1B0E", fontSize:16, fontWeight:600, opacity:level.done||level.current?1:0.5 }}>{level.label}</p>
                       {level.done&&<div className="flex gap-0.5 mt-1">{[1,2,3].map(s=><span key={s} style={{ fontSize:11 }}>{s<=level.stars?"⭐":"☆"}</span>)}</div>}
-                      {level.current&&<p style={{ fontFamily:"Nunito", color:"#7BC7F0", fontSize:12, fontWeight:700 }}>▶ In Progress</p>}
-                      {!level.done&&!level.current&&<p style={{ fontFamily:"Nunito", color:"#9A9080", fontSize:12 }}>🔒 Locked</p>}
+                      {level.current&&<p style={{ fontFamily:"Nunito", color:"#7BC7F0", fontSize:12, fontWeight:700 }}>▶ {t("In Progress")}</p>}
+                      {!level.done&&!level.current&&<p style={{ fontFamily:"Nunito", color:"#9A9080", fontSize:12 }}>🔒 {t("Locked")}</p>}
                     </div>
                   </div>
                 </div>

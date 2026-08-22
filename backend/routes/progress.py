@@ -25,7 +25,11 @@ def get_child_profile(child_id: str) -> ChildProfile:
 def create_child_profile(payload: ChildProfile) -> ChildProfile:
     profile = adaptive_engine.create_child_profile(payload.dict())
     if firebase_service.enabled:
-        firebase_service.set_document("children", profile["child_id"], profile)
+        try:
+            firebase_service.set_document("children", profile["child_id"], profile)
+        except Exception:
+            # Local adaptive progress remains available when Firestore is not provisioned.
+            pass
     return ChildProfile(**profile)
 
 

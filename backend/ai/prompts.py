@@ -10,7 +10,7 @@ Keep the tone warm, simple, and respectful. Return only valid JSON.
 """
 
 
-def build_scenario_prompt(profile: dict[str, Any], difficulty: int) -> str:
+def build_scenario_prompt(profile: dict[str, Any], difficulty: int, language: str = "en") -> str:
     profile_json = json.dumps(profile, ensure_ascii=False)
     return f"""
 {SYSTEM_PROMPT}
@@ -18,11 +18,12 @@ def build_scenario_prompt(profile: dict[str, Any], difficulty: int) -> str:
 Generate one scenario for a child profile below.
 - Difficulty: {difficulty} (1=easy, 2=medium, 3=challenging)
 - Child profile: {profile_json}
+- Output language: {language}. Write the question, context, options, explanation, image_alt, and hotspot text in this language.
 
 Requirements:
 1. Generate age-appropriate social or communication scenario.
 2. Make it suitable for a child with ASD and ID.
-3. Use the child's interest, target skill, and difficulty.
+3. Use the child's interest, including any custom interest entered by the child, target skill, and difficulty. Make the image and scenario clearly reflect that interest when appropriate.
 4. Include 4 options labeled A, B, C, D.
 5. Include the best answer and brief explanation.
 6. Return valid JSON in this exact structure:

@@ -40,8 +40,8 @@ class GeminiService:
             raise ValueError("Ollama response JSON must be an object.")
         return payload
 
-    def generate_scenario(self, profile: ChildProfile, difficulty: int) -> dict[str, Any]:
-        prompt = build_scenario_prompt(profile.model_dump(), difficulty)
+    def generate_scenario(self, profile: ChildProfile, difficulty: int, language: str = "en") -> dict[str, Any]:
+        prompt = build_scenario_prompt(profile.model_dump(), difficulty, language)
 
         try:
             request_body = json.dumps({
